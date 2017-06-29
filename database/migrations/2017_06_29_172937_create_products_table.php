@@ -19,7 +19,9 @@ class CreateProductsTable extends Migration
             $table->integer('price_id')->unsigned();
             $table->foreign('price_id')->references('id')->on('price_lists')->onDelete('cascade');
 
-            $table->string('name')->index();
+            $table->string('name');
+            $table->unique(array('price_id','name'));
+
             $table->string('units');
             $table->float('price');
             $table->integer('quantity');
