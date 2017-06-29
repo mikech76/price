@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProductTable extends Migration
+class CreateProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,7 +17,7 @@ class CreateProductTable extends Migration
             $table->increments('id');
 
             $table->integer('price_id')->unsigned();
-            $table->foreign('price_id')->references('id')->on('prices')->onDelete('cascade');
+            $table->foreign('price_id')->references('id')->on('price_lists')->onDelete('cascade');
 
             $table->string('name')->index();
             $table->string('units');
