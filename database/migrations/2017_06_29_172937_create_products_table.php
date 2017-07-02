@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->increments('id');
 
             $table->integer('price_id')->unsigned();
-            $table->foreign('price_id')->references('id')->on('price_lists')->onDelete('cascade');
+            $table->foreign('price_id')->references('id')->on('prices')->onDelete('cascade');
 
             $table->string('name');
             $table->unique(array('price_id','name'));

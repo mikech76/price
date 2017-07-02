@@ -11,6 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes();
+
+Route::get('/', 'HomeController@index');
+
+Route::get('home', function() {
+    return redirect('price.app');
 });
+
+// прайсы
+Route::resource('price', 'PriceController');
+Route::get('price/{id}/delete', 'PriceController@destroy');
