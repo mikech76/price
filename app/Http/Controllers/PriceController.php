@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Model\Price;
 use Auth;
+use App\Model\Price;
+use App\Model\Product;
+use Illuminate\Http\Request;
 
 class PriceController extends Controller
 {
@@ -26,7 +27,6 @@ class PriceController extends Controller
      */
     public function index(Request $request)
     {
-
         $prices = Price::where('user_id', '=', Auth::user()->id)->oldest('name');
 
         return view('price.index',
@@ -56,62 +56,82 @@ class PriceController extends Controller
         $price->user_id = Auth::user()->id;
         $price->name    = $request->name;
         $price->save();
-        return redirect('/price');
+        return redirect('price');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  int $priceId
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $priceId)
     {
-        $price = Price::find($id);
-        return view('price.show', ['price' => $price]);
+        $price    = Price::find($priceId);
+        $products = Product::where('price_id', '=', $priceId)->oldest('name');
+
+        if (trim($request->search)) {
+            $products->where(function($query) use ($request) {
+                $query->where('name', 'like', '%' . trim($request->search) . '%')
+                      ->orWhere('price', 'like', '%' . trim($request->search) . '%');
+            });
+        }
+
+        return view('price.show', ['price'         => $price, 'products' => $products->paginate(10),
+                                   'product_count' => $products->get()->count(),
+                                   'search'        => $request->search]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  int $priceId
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($priceId)
     {
-        $price = Price::find($id);
-        return view('price.edit', ['action' => '../' . $id, 'method' => 'PATCH', 'price' => $price]);
+        $price = Price::find($priceId);
+        if ($price->user_id == Auth::user()->id) {
+            return view('price.edit', ['action' => '../' . $priceId, 'method' => 'PATCH', 'price' => $price]);
+        } else {
+            return redirect('price/' . $priceId);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int                      $id
+     * @param  int                      $priceId
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $priceId)
     {
-        $price       = Price::find($id);
-        $price->name = $request->name;
-        $price->save();
-        return redirect('/price');
+        $price = Price::find($priceId);
+        if ($price->user_id == Auth::user()->id) {
+            $price       = Price::find($priceId);
+            $price->name = $request->name;
+            $price->save();
+        }
+        return redirect('price');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int $priceId
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($priceId)
     {
-        $price = Price::find($id);
-        $price->delete();
-        return redirect('/prices');
+        $price = Price::find($priceId);
+        if ($price->user_id == Auth::user()->id) {
+            $price->delete();
+        }
+        return redirect('price');
     }
 }

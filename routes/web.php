@@ -21,4 +21,9 @@ Route::get('home', function() {
 
 // прайсы
 Route::resource('price', 'PriceController');
-Route::get('price/{id}/delete', 'PriceController@destroy');
+Route::get('price/{priceId}/delete', 'PriceController@destroy');
+
+// продукты
+Route::resource('price.product', 'ProductController');
+Route::get('price/{priceId}/product/{productId}/delete', 'ProductController@destroy');
+

@@ -9,8 +9,8 @@
                 <table class="table table-striped">
                     <tr>
                         <th>id</th>
-                        <th>Name</th>
-                        <th>control</th>
+                        <th>Наименование</th>
+                        <th></th>
                     </tr>
 
                     @foreach($prices as $price)
@@ -28,9 +28,9 @@
                 <div class="panel-footer">
                     <a href="price/create" class="label label-primary">
                         <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-                        New price
+                        Новый прайс
                     </a>
-                    <div class="navbar-right">All: <span class="badge">{{$count}}</span></div>
+                    <div class="navbar-right">Всего: <span class="badge">{{$count}}</span></div>
                 </div>
 
                 <div class="text-center">{!! $prices->render() !!} </div>
