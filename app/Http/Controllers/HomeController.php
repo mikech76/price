@@ -25,4 +25,13 @@ class HomeController extends Controller
     {
         return redirect('price');
     }
+
+    /**
+     *
+     */
+    public function tokenSuggest()
+    {
+        return view('token');
+    }
+
 }

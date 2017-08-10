@@ -27,3 +27,6 @@ Route::get('price/{priceId}/delete', 'PriceController@destroy');
 Route::resource('price.product', 'ProductController');
 Route::get('price/{priceId}/product/{productId}/delete', 'ProductController@destroy');
 
+// подбор токенов
+
+Route::get('token', 'HomeController@tokenSuggest');
